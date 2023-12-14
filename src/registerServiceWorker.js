@@ -2,16 +2,30 @@
 
 import { register } from "register-service-worker";
 
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready() {
       console.log(
         "App is being served from cache by a service worker.\n" +
-          "For more details, visit https://goo.gl/AFskqB"
+        "For more details, visit https://goo.gl/AFskqB"
       );
     },
-    registered() {
+    registered(registration) {
       console.log("Service worker has been registered.");
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: 'BHaGoupz6SaaiUM6EOTtsVSVjAklaOV3Y4lmexYmEV7XwDDiA4LkPLfqmvpaF4FcyyHEZ2LvLQUp9sHpuW0K96s'
+            }).then(newSubscription => {
+              console.log('Push subscription successful:', newSubscription);
+            }).catch(error => {
+              console.error('Error subscribing to push notifications:', error);
+            });
+          }
+        });
+      }
     },
     cached() {
       console.log("Content has been cached for offline use.");
@@ -31,4 +45,4 @@ if (process.env.NODE_ENV === "production") {
       console.error("Error during service worker registration:", error);
     },
   });
-}
+// }
