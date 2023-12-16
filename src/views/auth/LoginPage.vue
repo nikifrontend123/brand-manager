@@ -33,6 +33,11 @@
                 </div>
             </form>
         </div>
+        <div class=" mt-4">
+            <router-link to="/catalog">
+                <button class="btn btn-danger">Catalog</button>
+            </router-link>
+        </div>
         <div class="d-flex justify-content-center p-2">
             <router-link to="/Registration" class="w-100 rounded"
                 style="box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;">

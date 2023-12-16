@@ -1,7 +1,6 @@
 <template>
-    <InstallPrompt></InstallPrompt>
     <div class="d-flex flex-column justify-content-around align-items-center"
-        style="height:100vh;background: linear-gradient(113deg, #F48B29 31%, #eca25d 97%);">
+    style="height:100vh;background: linear-gradient(113deg, #F48B29 31%, #eca25d 97%);">
         <div class="d-flex flex-column align-items-center justify-content-center">
             <img :src="logo" class="d-md-none" style="width: 75vw; object-fit: contain;grey">
             <img :src="logo" class="d-md-block d-none" style="width: 20vw; object-fit: contain;grey">
@@ -14,8 +13,9 @@
             Get Started
         </router-link>
         <!-- <router-link to="/dashboard" class="text-white text-decoration-none fs-4"> -->
-        Home
+            Home
         <!-- </router-link> -->
+            <InstallPrompt></InstallPrompt>
     </div>
 </template>
 
