@@ -1,183 +1,51 @@
 import { createStore } from "vuex";
-import axios from 'axios';
-
+import axiosinstance from '@/axiosPort';
 export default createStore({
   state: {
-    fabricator: [
-      {
-        id: 1,
-        img: 'http://dillisix.com/storage/56/Dheeraj-Sardar.jpeg',
-        status: 'Access Granted',
-        role: 'Admin',
-        assignee_code: '23',
-        name: 'Dheeraj Sardar',
-        contact: '665588744',
-        email: 'dhes@gmail.com',
-        password: '95622wee',
-      },
-      {
-        id: 2,
-        img: 'http://dillisix.com/storage/83/IMG20230404151417.jpg',
-        status: 'Access Granted',
-        role: 'Assignee',
-        assignee_code: '23',
-        name: 'Hari Shankar Sharma',
-        contact: '665588744',
-        email: 'hari@gmail.com',
-        password: '95622wee',
-      },
-      {
-        id: 3,
-        img: 'http://dillisix.com/storage/54/kedar.jpg',
-        status: 'Access Granted',
-        role: 'Assignee',
-        assignee_code: '23',
-        name: 'Kedar',
-        contact: '665588744',
-        email: 'hari@gmail.com',
-        password: '95622wee',
-      },
-    ],
-    suppliers: [],
-    jobWorks: [],
     stocks: [],
     purchases: [],
     markets: [],
-    skus: [],
     parties: [],
-    catalogSku: [],
-    activeImg: {},
-    createParty: [],
     users: [],
-    ledgerEntries: [
-      {
-        date: '23 Dec 23', order: 10000, ready: '', demand: '',
-        color: [
-          {
-            img: 'https://fabricpandit.com/cdn/shop/files/fabric-pandit-fabric-peacock-blue-color-plain-cotton-satin-fabric-width-42-inches-36447076286639_1400x.jpg?v=1686052205',
-            qty: 5000
-          },
-          {
-            img: "https://recovo.co/wp-content/uploads/2023/04/portadas-NEWSLETTER-98.jpg",
-            qty: 5000
-          },
-        ]
-      },
-      {
-        date: '24 Dec 23', order: 5000, ready: '', demand: '',
-        color: [
-          {
-            img: 'https://fabricpandit.com/cdn/shop/files/fabric-pandit-fabric-peacock-blue-color-plain-cotton-satin-fabric-width-42-inches-36447076286639_1400x.jpg?v=1686052205',
-            qty: 2500
-          },
-          {
-            img: "https://recovo.co/wp-content/uploads/2023/04/portadas-NEWSLETTER-98.jpg",
-            qty: 2500
-          },
-        ]
-      },
-      {
-        date: '25 Dec 23', order: '', ready: 6000, demand: '',
-        color: [
-          {
-            img: 'https://fabricpandit.com/cdn/shop/files/fabric-pandit-fabric-peacock-blue-color-plain-cotton-satin-fabric-width-42-inches-36447076286639_1400x.jpg?v=1686052205',
-            qty: 3000
-          },
-          {
-            img: "https://recovo.co/wp-content/uploads/2023/04/portadas-NEWSLETTER-98.jpg",
-            qty: 3000
-          },
-        ]
-      },
-      {
-        date: '26 Dec 23', order: '', ready: '', demand: 3000,
-        color: [
-          {
-            img: 'https://fabricpandit.com/cdn/shop/files/fabric-pandit-fabric-peacock-blue-color-plain-cotton-satin-fabric-width-42-inches-36447076286639_1400x.jpg?v=1686052205',
-            qty: 1500
-          },
-          {
-            img: "https://recovo.co/wp-content/uploads/2023/04/portadas-NEWSLETTER-98.jpg",
-            qty: 1500
-          },
-        ]
-      },
-    ],
-    activeEntry: {}
+    fabParty: [],
+    ledgers: [], 
+    dispatches: [],
+    showStock: {},
+    ledger: [],
+    filteredOrders: [],
+    action: false, 
   },
   getters: {
-    getActiveEntry: state => state.activeEntry,
-    getLedgers(state) {
-      return state.ledgerEntries
-    },
-    getParties(state) {
-      return state.parties
-    },
-    getFabricator(state) {
-      return state.fabricator
-    },
-    getSuppliers(state) {
-      return state.suppliers
-    },
-    getIsLive(state) {
-      return state.isLive;
-    },
+    getOrders: state => state.orders,
+    getFabParties: state => state.fabParty,
+    getLedgerss: state => state.ledgers,
+    getParties: state => state.parties,
+    getIsLive: state => state.isLive,
     getStatus: (state) => (state.isLive ? 'Live' : 'Draft'),
-    getDatas(state) {
-      return state.datas
-    },
-    getDatapps(state) {
-      return state.datapps
-    },
-    getCards(state) {
-      return state.cards
-    },
-    getLists(state) {
-      return state.lists
-    },
-    getList: (state) => (listId) => {
-      let index = state.lists.findIndex(list => list.id == listId);
-      return state.lists[index];
-    },
-    // getSupplier: (state) => (sId) => {
-    //   let index = state.suppliers.findIndex(s => s.id == sId);
-    //   return state.suppliers[index];
-    // },
-    getMarkets(state) {
-      return state.markets
-    },
-    getSkus(state) {
-      return state.skus
-    },
-    getjobWorks(state) {
-      return state.jobWorks
-    },
-    getStocks(state) {
-      return state.stocks
-    },
-    getPurchases(state) {
-      return state.purchases
-    },
-    getCatalogSku: state => state.catalogSku,
-    getCreateParty: state => state.createParty,
+    getMarkets: state => state.markets,
+    getStocks: state => state.stocks,
+    getPurchases: state => state.purchases,
     getUsers: state => state.users,
-    getActiveImg(state) {
-      return state.activeImg
-    },
-
+    getDispatches: state => state.dispatches,
+    getShowStock: state => state.showStock,
+    getLedger: state => state.ledger,
+    getFilteredOrders: state => state.filteredOrders,
   },
   mutations: {
+    setLedgers(state, data) {
+      state.ledgers = data
+    },
+    setFabParties(state, data) {
+      state.fabParty = data
+    },
     addToFabricator(state, data) {
       state.fabricator.push(data)
     },
     toggleIsLive(state) {
       state.isLive = !state.isLive;
     },
-    Jobwork(state, data) {
-      state.jobWorks = data
-    },
-    setSuppliers(state, data) {
-      state.suppliers = data
+    setShowStock(state, data) {
+      state.showStock = data
     },
     setStock(state, data) {
       state.stocks = data
@@ -188,76 +56,81 @@ export default createStore({
     setMarket(state, data) {
       state.markets = data
     },
-    setSku(state, data) {
-      state.skus = data
-    },
     setParties(state, data) {
       state.parties = data
     },
-    addToSupplier(state, data) {
-      state.suppliers.push(data)
+    setDispatch(state, data) {
+      state.dispatches = data
     },
-    setCatalogSku(state, data) {
-      state.catalogSku = data
+    setLedger(state, data) {
+      state.ledger = data
     },
-    showActiveImg(state, data) {
-      state.activeImg = data
+    actionDone(state) {
+      state.action = true;
     },
-    hideActiveImg(state) {
-      state.activeImg = {}
-    },
-    showActiveEntry(state, data) {
-      state.activeEntry = data
-    },
-    hideActiveEntry(state) {
-      state.activeEntry = {}
-    },
-    setCreateParty(state, data) {
-      state.createParty = data
+    setFilteredOrders(state, data) {
+      state.filteredOrders = data;
     },
     setUsers(state, data) {
       state.users = data
     },
+   
   },
   actions: {
-    addToFabricator({ commit }, data) {
-      commit('addToFabricator', data)
-    },
-    fetchJobWorks({ commit }) {
-      axios.get('http://192.168.1.133:8001/api/purchaseorders')
-        .then(response => {
-          if (response.data.status === 'ok') {
-            commit('Jobwork', response.data.data)
-          } else if (response.data.status === 'error') {
-            alert(response.data.message);
-          } else {
-            alert('Something went wrong! Please try again');
-          }
-        })
-        .catch((error) => { console.error('fetchJobWorks:', error) })
-    },
-    // fetchJobWorks({commit}, data){
-    //   commit('Jobwork', data)
-    // },
-    fetchSuppliers({ commit }) {
+    // ----Parties----
+    fetchParties({ commit }) {
       const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/suppliers', {
+      axiosinstance.get('parties?api_secret=api123', {
         headers: { "Authorization": `Bearer ${token}` }
       })
         .then(response => {
           if (response.data.status === 'ok') {
-            commit('setSuppliers', response.data.data)
+            commit('setParties', response.data.data)
           } else if (response.data.status === 'error') {
             alert(response.data.message);
           } else {
-            alert('Something went wrong! Please try again');
+            alert('Something went wrong! Please try again')
           }
         })
-        .catch((error) => { console.error('fetchSuppliers:', error) })
+        .catch((error) => { console.error('fetchParties:', error) })
     },
+    fetchPartiesFab({ commit }, productSid) {
+      const token = localStorage.getItem('token')
+      axiosinstance.get('parties?role=fabricator&&product_sid=' + productSid, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then(response => {
+          if (response.data.status === 'ok') {
+            commit('setFabParties', response.data.data)
+          } else if (response.data.status === 'error') {
+            alert(response.data.message);
+          } else {
+            alert('Something went wrong! Please try again')
+          }
+        })
+        .catch((error) => { console.error('fetchPartiesFab:', error) })
+    },
+    fetchUsers({ commit }) {
+      const token = localStorage.getItem('token')
+      axiosinstance.get('users?party=not_created', {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then(response => {
+          if (response.data.status === 'ok') {
+            commit('setUsers', response.data.data)
+          } else if (response.data.status === 'error') {
+            alert(response.data.message);
+          } else {
+            alert('Something went wrong! Please try again')
+          }
+        })
+        .catch((error) => { console.error('fetchUsers:', error) })
+    },
+
+    // ----stocks----
     fetchStocks({ commit }) {
       const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/stocks', {
+      axiosinstance.get('stocks', {
         headers: { "Authorization": `Bearer ${token}` }
       })
         .then(response => {
@@ -271,9 +144,40 @@ export default createStore({
         })
         .catch((error) => { console.error('fetchStocks:', error) })
     },
+    fetchShowStocks({ commit }, data) {
+      const token = localStorage.getItem('token')
+      axiosinstance.get('stocks/' + data.stock_sid, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then(response => {
+          if (response.data.status === 'ok') {
+            commit('setShowStock', response.data.data)
+          } else if (response.data.status === 'error') {
+            alert(response.data.message);
+          } else {
+            alert('Something went wrong! Please try again');
+          }
+        })
+        .catch((error) => { console.error('fetchShowStocks:', error) })
+    },
+    fetchStockLedger({ commit }, payload) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.get('ledgers/' + payload.ledger_sid + '?page=' + payload.page, {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then((response) => {
+          commit('setLedger', response.data.data)
+        })
+        .catch((error) => {
+          console.error('Error fetching ledger:', error);
+        });
+    },
+
+    // ----purchase----
     fetchPurchase({ commit }) {
       const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/purchases', {
+      axiosinstance.get('purchases', {
         headers: { "Authorization": `Bearer ${token}` }
       })
         .then(response => {
@@ -288,9 +192,11 @@ export default createStore({
         })
         .catch((error) => { console.error('fetchPurchase:', error) })
     },
+
+    // ----Market----
     fetchMarket({ commit }) {
       const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/ds/products', {
+      axiosinstance.get('ds/products', {
         headers: { "Authorization": `Bearer ${token}` }
       })
         .then(response => {
@@ -302,101 +208,158 @@ export default createStore({
             alert('Something went wrong! Please try again')
           }
         })
-        .catch((error) => { console.error('fetchJobWorks:', error) })
+        .catch((error) => { console.error('fetchMarket:', error) })
     },
-    fetchSku({ commit }) {
-      axios.get('http://192.168.1.133:8001/api/ds/product_skus')
-        .then(response => {
-          if (response.data.status === 'ok') {
-            commit('setSku', response.data.data)
-          } else if (response.data.status === 'error') {
-            alert(response.data.message);
-          } else {
-            alert('Something went wrong! Please try again')
-          }
-        })
-        .catch((error) => { console.error('fetchSku:', error) })
-    },
-    fetchCatalogSku({ commit }) {
-      axios.get('http://192.168.1.133:8001/api/stocks?type=sku')
-        .then(response => {
-          if (response.data.status === 'ok') {
-            commit('setCatalogSku', response.data.data)
-          } else if (response.data.status === 'error') {
-            alert(response.data.message);
-          } else {
-            alert('Something went wrong! Please try again')
-          }
-        })
-        .catch((error) => { console.error('fetchSku:', error) })
-    },
-    fetchParties({ commit }) {
-      const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/parties?api_secret=api123', {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-        .then(response => {
-          if (response.data.status === 'ok') {
-            commit('setParties', response.data.data)
-          } else if (response.data.status === 'error') {
-            alert(response.data.message);
-          } else {
-            alert('Something went wrong! Please try again')
-          }
-        })
-        .catch((error) => { console.error('fetchParties:', error) })
-    },
-    fetchUsers({ commit }) {
-      const token = localStorage.getItem('token')
-      axios.get('http://192.168.1.133:8001/api/users', {
-        headers: { "Authorization": `Bearer ${token}` }
-      })
-        .then(response => {
-          if (response.data.status === 'ok') {
-            commit('setUsers', response.data.data)
-          } else if (response.data.status === 'error') {
-            alert(response.data.message);
-          } else {
-            alert('Something went wrong! Please try again')
-          }
-        })
-        .catch((error) => { console.error('fetchUsers:', error) })
-    },
-    fetchCreateParty({ commit }) {
-      const token = localStorage.getItem('token');
-      // const api_secret = 'api123';
-      axios.get('http://192.168.1.133:8001/api/parties?api_secret=api123', {
-        headers: { "Authorization": `Bearer ${token}`, }
 
+    // ----Orders----
+    fetchFilteredOrders({ commit }, payload) {
+      const token = localStorage.getItem('token');
+      return axiosinstance.get('orders', {
+        params: { status: payload },
+        headers: { "Authorization": `Bearer ${token}` }
       })
         .then(response => {
           if (response.data.status === 'ok') {
-            commit('setCreateParty', response.data.data)
+            commit('setFilteredOrders', response.data.data);
+          } else if (response.data.status === 'error') {
+            console.error('Error fetching orders:', response.data.message);
+          } else {
+            console.error('Something went wrong! Please try again.');
+          }
+
+          return response.data;
+        })
+        .catch((error) => {
+          console.error('fetchFilteredOrders:', error);
+          throw error;
+        });
+    },
+
+    // ----incoming----
+    fetchDispatch({ commit }) {
+      const token = localStorage.getItem('token')
+      axiosinstance.get('dispatches', {
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then(response => {
+          if (response.data.status === 'ok') {
+            commit('setDispatch', response.data.data)
           } else if (response.data.status === 'error') {
             alert(response.data.message);
           } else {
             alert('Something went wrong! Please try again')
           }
         })
-        .catch((error) => { console.error('fetchCreateParty:', error) })
+        .catch((error) => { console.error('fetchDispatch:', error) })
+    },
+
+    // ----AllPost&Put----
+    postDemand({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.post('demands', data,
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'pending') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('new demand:', error);
+        })
+    },
+    postOrder({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.post('orders', data,
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'ok') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('new order:', error);
+        })
+    },
+    postAdjustment({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.post('adjustments', data,
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'ok') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('adjustment:', error);
+        })
+    },
+    postCreateLedger({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.post('ledgers', data,
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'ok') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('createLedger:', error);
+        })
+    },
+    putCanceleOrder({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.put('orders/' + data, { status: 'cancelled' },
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 200) {
+            commit('actionDone');
+          }
+        })
+        .catch((error) => {
+          console.error('putCanceleOrder:', error);
+        });
+    },
+    postDispatch({ commit }, data) {
+      const token = localStorage.getItem('token')
+      axiosinstance.post('purchases', data,
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'ok') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('dispatch:', error);
+        })
+    },
+    putReorderPurchase({ commit }, data) {
+      const token = localStorage.getItem('token')
+
+      axiosinstance.put('orders/' + data, {
+        message: 'Reissue',
+        status: 'issued'
+      },
+        { headers: { "Authorization": `Bearer ${token}` } })
+        .then((response) => {
+          if (response.status === 'ok') {
+            commit('actionDone')
+          }
+        })
+        .catch((error) => {
+          console.error('createLedger:', error);
+        })
+    },
+
+    addToFabricator({ commit }, data) {
+      commit('addToFabricator', data)
     },
     addToList({ commit }, data) {
       commit('addToList', data)
-    },
-    addToSupplier({ commit }, data) {
-      commit('addToSupplier', data)
-    },
-    showActiveImg({ commit }, data) {
-      commit('showActiveImg', data)
-    },
-    hideActiveImg({ commit }, data) {
-      commit('hideActiveImg', data)
-    },
-    showActiveEntry({ commit }, data) {
-      commit('showActiveEntry', data)
-    },
-    hideActiveEntry({ commit }, data) {
-      commit('hideActiveEntry', data)
     },
   },
   modules: {},

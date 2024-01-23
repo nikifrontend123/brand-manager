@@ -7,32 +7,59 @@
             <div class="bottom-nav w-100 position-absolute" style="height: 5%;">
               <div class="btn-front position-absolute d-flex justify-content-evenly w-100 pt-2"
                 style="bottom:0; width: 100%; background-color: #F48B29; ">
-                <div class="d-grid">
-                  <RouterLink to="/Market" :class="{ 'text-white': currentRoute === 'Market' }"
+                <!-- <div class="d-grid">
+                  <RouterLink to="/stock-market" :class="{ 'text-white': currentRoute === 'StockMarket' }"
                     style="text-decoration:none;color:black;text-align: center;">
                     <i class="bi bi-house-door fs-4"></i>
                     <p class='mb-1' style="font-size: 14px;">Market</p>
                   </RouterLink>
-                </div>
+                </div> -->
+
+                <!-- <div class="d-grid">
+                  <RouterLink :to="{ path: '/parties' }"
+                    :class="{ 'text-white': $route.path === '/parties' || $route.path.startsWith('/parties/') }"
+                    style="text-decoration:none;color:black;text-align: center;">
+                    <i class="bi bi-journal-arrow-up fs-4"></i>
+                    <p class='mb-1' style="font-size: 14px;margin: 0">Parties</p>
+                  </RouterLink>
+                </div> -->
+
                 <div class="d-grid">
-                  <RouterLink to="/Catalog" :class="{ 'text-white': currentRoute === 'Catalog' }"
+                  <RouterLink :to="{ path: '/parties' }"
+                    :class="{ 'text-white': $route.matched.some(route => route.path === '/parties' || route.path.startsWith('/parties/')) }"
+                    style="text-decoration:none;color:black;text-align: center;">
+                    <i class="bi bi-journal-arrow-up fs-4"></i>
+                    <p class='mb-1' style="font-size: 14px;margin: 0">Parties</p>
+                  </RouterLink>
+                </div>
+
+                <div class="d-grid">
+                  <RouterLink :to="{ path: '/stocks' }"
+                    :class="{ 'text-white': $route.path === '/stocks' || $route.path.startsWith('/stocks/') }"
                     style="text-decoration:none;color:black;text-align: center;">
                     <i class="bi bi-send fs-4"></i>
                     <p class='mb-1' style="font-size: 14px;margin: 0">Shop</p>
                   </RouterLink>
                 </div>
                 <div class="d-grid">
-                  <RouterLink to="/CatalogSku" :class="{ 'text-white': currentRoute === 'CatalogSku' }"
+                  <RouterLink to="/orders" :class="{ 'text-white': currentRoute === 'FilteredOrders' }"
                     style="text-decoration:none;color:black;text-align: center;">
-                    <i class="bi bi-journal-arrow-up fs-4"></i>
-                    <p class='mb-1' style="font-size: 14px;margin: 0">SKU</p>
+                    <i class="bi bi-layers fs-4"></i>
+                    <p class='mb-1' style="font-size: 14px;">Orders</p>
                   </RouterLink>
                 </div>
                 <div class="d-grid">
-                  <RouterLink to="/StockSummary" :class="{ 'text-white': currentRoute === 'StockSummary' }"
+                  <RouterLink to="/incoming-orders" :class="{ 'text-white': currentRoute === 'IncomingOrders' }"
                     style="text-decoration:none;color:black;text-align: center;">
-                    <i class="bi bi-layers fs-4"></i>
-                    <p class='mb-1' style="font-size: 14px;">Stock</p>
+                    <i class="bi bi-box-arrow-in-down fs-4"></i>
+                    <p class='mb-1' style="font-size: 14px;">Incoming</p>
+                  </RouterLink>
+                </div>
+                <div class="d-grid">
+                  <RouterLink to="/purchase" :class="{ 'text-white': currentRoute === 'Purchase' }"
+                    style="text-decoration:none;color:black;text-align: center;">
+                    <i class="bi bi-house-door fs-4"></i>
+                    <p class='mb-1' style="font-size: 14px;">Purchase</p>
                   </RouterLink>
                 </div>
               </div>

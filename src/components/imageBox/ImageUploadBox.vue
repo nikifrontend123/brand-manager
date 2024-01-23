@@ -65,6 +65,8 @@
         this.isImage = file.type.startsWith('image/');
         this.previewUrl = URL.createObjectURL(file);
         this.buttonText = 'Change File';
+        console.log(file);
+        this.$emit('fileSelected', file);  
       },
       clearImage() {
         this.previewUrl = '';

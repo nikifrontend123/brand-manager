@@ -5,7 +5,7 @@
         </div>
         <div class=" ">
             <form @submit.prevent="submitForm()">
-                <ImageUploadBox @image="image"></ImageUploadBox>
+                <ImageUploadBox @fileSelected="handleFile"></ImageUploadBox>
 
                 <div class="container my-2">
                     <div class="form-floating mb-3">
@@ -16,42 +16,46 @@
 
                     <div class="form-floating mb-3">
                         <select class="form-select" id="assignee" v-model="form.UserId">
-                            <option value="" disabled>Select User by ID</option>
-                            <option v-for="(user, index) in users" :key="index" :value="user.UserId">
-                                {{ user.id }}
+                            <option value="" disabled>Select User by Name</option>
+                            <option v-for="(user, index) in users" :key="index" :value="user.id">
+                                {{ user.name }}
                             </option>
                         </select>
-                        <label for="assignee">User Id</label>
+                        <label for="assignee">User Name</label>
                     </div>
 
                     <div class="mb-3 my-1">
                         <label class="ms-3 fs-5">Role</label>
                         <div class="d-flex justify-content-evenly w-100 container my-2">
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="radio" value="Fabricator" id="role-fabricator"
+                                <input class="form-check-input" type="radio" value="fabricator" id="role-fabricator"
                                     v-model="form.tag" />
                                 <label class="form-check-label" for="role-fabricator">
-                                    Fabricator
+                                    fabricator
                                 </label>
                             </div>
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="radio" value="Staff" id="role-staff"
+                                <input class="form-check-input" type="radio" value="staff" id="role-staff"
                                     v-model="form.tag" />
-                                <label class="form-check-label" for="role-staff">Staff</label>
+                                <label class="form-check-label" for="role-staff">staff</label>
                             </div>
                             <div class="form-check w-100">
-                                <input class="form-check-input" type="radio" value="Manager" id="role-manager"
+                                <input class="form-check-input" type="radio" value="manager" id="role-manager"
                                     v-model="form.tag" />
-                                <label class="form-check-label" for="role-manager">Manager</label>
+                                <label class="form-check-label" for="role-manager">manager</label>
                             </div>
-                            <div class="form-check w-100">
+                            <!-- <div class="form-check w-100">
                                 <input class="form-check-input" type="radio" value="Supplier" id="role-supplier"
                                     v-model="form.tag" />
                                 <label class="form-check-label" for="role-supplier">Supplier</label>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="name@example.com" v-model="form.sid">
+                        <label for="name">sid</label>
+                    </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="name" placeholder="name@example.com" v-model="form.gst">
                         <label for="name">GST</label>
@@ -61,7 +65,8 @@
                         <label for="name">Pan</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="name" placeholder="name@example.com" v-model="form.info">
+                        <input type="text" class="form-control" id="name" placeholder="name@example.com"
+                            v-model="form.info">
                         <label for="name">info</label>
                     </div>
                 </div>
@@ -75,27 +80,21 @@
 
 <script>
 import ImageUploadBox from '@/components/imageBox/ImageUploadBox.vue'
-
+import axiosinstance from '@/axiosPort'
 export default {
     data() {
         return {
-            // users: [
-            //     { id: 1, UserId: 'JD123' },
-            //     { id: 2, UserId: 'JS456' },
-            //     { id: 3, UserId: 'BJ789' },
-            //     { id: 4, UserId: 'AJ101' },
-            //     { id: 5, UserId: 'CB202' },
-            // ],
             form: {
                 UserId: '',
                 name: '',
                 Bname: '',
                 gst: '',
-                info:'',
+                info: '',
                 pan: '',
                 tag: '',
                 status: '',
                 parentImageUrl: '',
+                sid:''
             }
         };
     },
@@ -110,9 +109,21 @@ export default {
     mounted() {
         this.$store.dispatch('fetchUsers')
     },
+
     methods: {
         submitForm() {
-            this.$store.dispatch('fetchCreateParty', this.form).then(() => {
+            const formData = {
+                user_id: this.form.UserId,
+                type: this.form.tag,
+                info: this.form.info,
+                image: this.form.parentImageUrl,
+                sid: this.form.sid
+            };
+            const token = localStorage.getItem('token')
+            axiosinstance.post('parties', formData, {
+                headers: { "Authorization": `Bearer ${token}` }
+            }).then(response => {
+                console.log(response)
                 this.form = {
                     UserId: '',
                     name: '',
@@ -120,9 +131,13 @@ export default {
                     gst: '',
                     pan: '',
                 };
-            });
+            })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         },
-        image(value) {
+        handleFile(value) {
+            console.log('handle');
             console.log(value)
             this.form.parentImageUrl = value
         }
